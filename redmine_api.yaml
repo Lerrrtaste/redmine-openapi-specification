@@ -1,0 +1,381 @@
+swagger: '2.0'
+info:
+  title: 'Concat Redmine API'
+  description: 'Custom (incomplete!) OpenAPI Scheme for Redmine'
+  version: '1.1'
+host: scm.ccc-concat.de
+basePath: /
+schemes: [https]
+externalDocs:
+  description: Redmine API Documentation
+  url: 'https://www.redmine.org/projects/redmine/wiki/Rest_api'
+
+##Notes
+# PowerApps Custom Connectors do NOT support Operation level Parameter definition
+# Optional Parameter's visibility needs to be set to "advanced" in power apps
+
+## Implemented Queries
+# Projects
+# - ProjectsList
+# - ProjectShow
+#
+# Issues TODO
+# - IssuesList TODO
+# - IssueShow TODO
+# - IssueCreate TODO
+#
+# Time Entries TODO
+# - TimeList TODO
+# - TimeShow TODO
+# - TimeCreate TODO
+# - TimeUpdate TODO
+# - TimeDelete TODO
+
+
+## "Content-Type" and "Accepts" Header.
+# Xml would also be possible, but I dont use it
+consumes: [application/json]
+produces: [application/json]
+
+
+## Authentication
+# https://swagger.io/docs/specification/2-0/authentication/
+securityDefinitions:
+  api_key:
+    type: apiKey
+    in: header
+    name: X-Redmine-API-Key
+
+security:
+  - api_key: []
+
+
+## Endpoints
+# https://swagger.io/docs/specification/2-0/paths-and-operations/
+paths:
+  /projects.json:
+    get:
+      summary: 'List Projects'
+      description: 'Returns all projects (all public projects and private projects where user have access to).'
+      operationId: ProjectsGet
+      tags: [ Projects ]
+      parameters:
+        - name: include
+          in: query
+          description: 'fetch associated data (optional). Possible values: trackers, issue_categories, enabled_modules. Values should be separated by a comma ",".'
+          required: false
+          type: string
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: object
+            required:
+              - projects
+              - total_count
+              - offset
+              - limit
+            properties:
+              projects: #array
+                type: array
+                items:
+                  $ref: '#/definitions/project'
+              total_count:
+                type: integer
+              offset:
+                type: integer
+              limit:
+                type: integer
+
+  /projects/{id}.json:
+    get:
+      summary: 'Show Project'
+      description: 'Returns the project of given id or identifier.'
+      operationId: ProjectsShow
+      tags: [ Projects ]
+      parameters:
+        - $ref: '#/parameters/idParam'
+        - name: include
+          in: query
+          description: 'fetch associated data (optional). Possible values: trackers, issue_categories, enabled_modules (since 2.6.0), time_entry_activities (since 3.4.0). Values should be separated by a comma ",".'
+          required: false
+          type: string
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: object
+            required:
+              - project
+            properties:
+              project:
+                $ref: '#/definitions/project'
+
+  /issues.json:
+    get:
+      summary: 'List Issues'
+      description: 'Returns a paginated list of issues. By default, it returns open issues only.'
+      operationId: IssuesList
+      tags: [ Issues ]
+      parameters:
+        - $ref: '#/parameters/limitParam'
+        - $ref: '#/parameters/offsetParam'
+        - name: sort
+          in: query
+          description: column to sort with. Append :desc to invert the order. (optional)
+          required: false
+          type: string
+        - name: include
+          in: query
+          description: 'fetch associated data (optional, use comma to fetch multiple associations). Possible values: children,attachments,relations,changesets,journals,watchers'
+          required: false
+          type: string
+        - name: issue_id
+          in: query
+          description: 'get issue with the given id or multiple issues by id using comma to separate id.'
+          required: false
+          type: integer
+        - name: project_id
+          in: query
+          description: 'get issues from the project with the given id (a numeric value, not a project identifier).'
+          required: false
+          type: integer
+        - name: subproject_id
+          in: query
+          description: 'get issues from the subproject with the given id. You can use project_id=XXX&subproject_id=!* to get only the issues of a given project and none of its subprojects.'
+          required: false
+          type: integer
+        - name: tracker_id
+          in: query
+          description: 'get issues from the tracker with the given id'
+          required: false
+          type: integer
+        - name: status_id
+          in: query
+          description: 'get issues with the given status id only. Possible values: open, closed, * to get open and closed issues, status id'
+          required: false
+          type: string
+        - name: assigned_to_id
+          in: query
+          description: 'get issues which are assigned to the given user id. me can be used instead an ID to fetch all issues from the logged in user (via API key or HTTP auth)'
+          required: false
+          type: string
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: object
+            required:
+              - projects
+              - total_count
+              - offset
+              - limit
+            properties:
+              projects: #array
+                type: array
+                items:
+                  $ref: '#/definitions/project'
+              total_count:
+                type: integer
+              offset:
+                type: integer
+              limit:
+                type: integer
+
+  /issues/{id}.json:
+    get:
+      summary: 'Show Issue'
+      description: 'Returns the issue of given id or identifier.'
+      operationId: IssueShow
+      tags: [ Issues ]
+      parameters:
+        - $ref: '#/parameters/idParam'
+        - name: include
+          in: query
+          description: 'fetch associated data (optional, use comma to fetch multiple associations). Possible values: children,attachments,relations,changesets,journals,watchers'
+          required: false
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            required:
+              - issue
+            properties:
+              issue:
+                $ref: '#/definitions/issue'
+
+
+## Parameters
+# https://swagger.io/docs/specification/2-0/describing-parameters/
+parameters:
+  idParam:
+    name: "id"
+    in: path
+    description: "id or identifier of the project/issue/user"
+    required: true
+    type: string
+  limitParam:
+    name: limit
+    in: query
+    description: "the number of items to be present in the response (default is 25, maximum is 100)"
+    required: false
+    type: integer
+  offsetParam:
+    name: offset
+    in: query
+    description: "the offset of the first object to retrieve"
+    required: false
+    type: integer
+
+
+
+
+## Responses
+# https://swagger.io/docs/specification/2-0/describing-responses/
+responses: {}
+
+
+## Input and Output Models
+# Common data structure (schema object) definitions.
+definitions:
+  idNameObject:
+    type: object
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+  idNameArray:
+    type: array
+    items:
+      $ref: '#/definitions/idNameObject'
+  project:
+    type: object
+    required:
+      - id
+      - name
+      - identifier
+      - description
+      - status
+      - created_on
+      - updated_on
+      - is_public
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      identifier:
+        type: string
+      description:
+        type: string
+      status:
+        type: integer
+      is_public:
+        type: boolean
+      created_on:
+        type: string
+      updated_on:
+        type: string
+      parent:
+        $ref: '#/definitions/idNameObject'
+      #below: optional associated data from 'include' parameter
+      issue_categories:
+        $ref: '#/definitions/idNameArray'
+      trackers:
+        $ref: '#/definitions/idNameArray'
+      enabled_modules:
+        $ref: '#/definitions/idNameArray'
+      time_entry_activities:
+        $ref: '#/definitions/idNameArray'
+  issue:
+    type: object
+    required:
+      - id
+      - project
+      - tracker
+      - status
+      - priority
+      - author
+      - subject
+      - description
+      - start_date
+      - due_date
+      - done_ratio
+      - is_private
+      - estimated_hours
+      - created_on
+      - updated_on
+      - closed_on
+    properties:
+      id:
+        type: integer
+      project:
+        $ref: '#/definitions/idNameObject'
+      tracker:
+        $ref: '#/definitions/idNameObject'
+      status:
+        $ref: '#/definitions/idNameObject'
+      priority:
+        $ref: '#/definitions/idNameObject'
+      author:
+        $ref: '#/definitions/idNameObject'
+      assigned_to:
+        $ref: '#/definitions/idNameObject'
+      subject:
+        type: string
+      description:
+        type: string
+      start_date:
+        type: string
+      due_date:
+        type: string
+      done_ratio:
+        type: integer
+      is_private:
+        type: boolean
+      estimated_hours:
+        type: number
+      created_on:
+        type: string
+      updated_on:
+        type: string
+      closed_on:
+        type: string
+      #below: optional associated data from 'include' parameter
+      children:
+        $ref: '#/definitions/idNameArray'
+      attachments:
+        $ref: '#/definitions/idNameArray'
+      relations:
+        $ref: '#/definitions/idNameArray'
+      changesets:
+        $ref: '#/definitions/idNameArray'
+      journals:
+        $ref: '#/definitions/idNameArray'
+      watchers:
+        $ref: '#/definitions/idNameArray'
+
+
+
+
+## Tags
+# https://swagger.io/docs/specification/2-0/grouping-operations-with-tags/
+tags:
+  - name: "Projects"
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_Projects
+  - name: "Issues"
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_Issues
+  - name: "Users"
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_Users
+  - name: "TimeEntries"
+    externalDocs:
+      url: https://www.redmine.org/projects/redmine/wiki/Rest_TimeEntries
