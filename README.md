@@ -47,9 +47,9 @@
 | Files                         |               ❌              |
 
 ## Download
-[Go to the original YAML File](https://github.com/Lerrrtaste/redmine-openapi-specification/blob/dc9e239b80dd68d4fc57fb1e620a709fec0e76f6/redmine_openapi.yaml)
+[Go to the original YAML File](https://github.com/Lerrrtaste/redmine-openapi-specification/blob/main/redmine_openapi.yaml)
 or
-[the generated json.](https://github.com/Lerrrtaste/redmine-openapi-specification/blob/dc9e239b80dd68d4fc57fb1e620a709fec0e76f6/redmine_openapi.json) 
+[the generated json.](https://github.com/Lerrrtaste/redmine-openapi-specification/blob/main/redmine_openapi.json) 
 
 ## Custom Connector
 There are some limitations I found when using Custom Connectors that prevent the "correct" OpenAPI File from working.
@@ -63,7 +63,7 @@ There are some limitations I found when using Custom Connectors that prevent the
   }
 }` While some Parameters are required, most are optional. In the Custom Connector Editor's Test Tab this works fine, but when using it in an actual formula in Power Apps, it will throw an error if you don't set every single possible parameter of the JSON Object. But only for nested Objects, optional top level Parameters work as expected.  That means it is only possible to update *every* attribute of an Issue, and initally empty ones now need to have some value.
 
-To get around this I collect everything as top level attribute and format it in Redmine's required format via Policies. But those cannot be shared in the file so you have to add them yourself:<br>- First import the [the customconnector.json file](https://github.com/Lerrrtaste/redmine-openapi-specification/blob/cef4523fe424ad3558504bccab0f1cfd094ee3b8/custom_connector/redmine_openapi_customconnector.json) as usual<br>- Then add a Policy for every Resource you want to Create/Update later using these Input Parameters:
+To get around this I collect everything as top level attribute and format it in Redmine's required format via Policies. But those cannot be shared in the file so you have to add them yourself:<br>- First import the [the customconnector.json file](https://github.com/Lerrrtaste/redmine-openapi-specification/blob/main/custom_connector/redmine_openapi_customconnector.json) as usual<br>- Then add a Policy for every Resource you want to Create/Update later using these Input Parameters:
 
 | Input Parameter | Value                                                                     |
 |-----------------|---------------------------------------------------------------------------|
