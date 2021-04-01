@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  title: 'Redmine API for MS Custom Connector'
+  title: 'Redmine API'
   description: 'Custom (incomplete!) OpenAPI Specification for the Redmine Rest API.<br><br><b>IMPORTANT: Read readme for correct Custom Connector setup.'
   version: '1.3'
 host: localhost:8080
