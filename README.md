@@ -38,7 +38,7 @@
 | Wiki Pages                    |               ❌              |
 | Queries                       |               ❌              |
 | Attachments                   |               ❌              |
-| Enumerations                  |               ❌              |
+| Enumerations                  |               :heavy_check_mark:              |
 | Issue Categories              |               ❌              |
 | Roles                         |               ❌              |
 | Groups                        |               ❌              |
