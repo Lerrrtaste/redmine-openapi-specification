@@ -668,7 +668,36 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/tracker'
-
+  /enumerations/{resource}.json:
+    get:
+      summary: 'List Enumerations'
+      description: 'Possible parameters: issue_priorities, time_entry_activities, document_categories'
+      operationId: EnumerationsList
+      tags: [ Enumerations ]
+      parameters:
+        - name: 'resource'
+          in: path
+          description: 'Possible values: issue_priorities, time_entry_activities, document_categories'
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              time_entry_activities:
+                type: array
+                items:
+                  $ref: '#/definitions/enumeration'
+              document_categories:
+                type: array
+                items:
+                  $ref: '#/definitions/enumeration'
+              issue_priorities:
+                type: array
+                items:
+                  $ref: '#/definitions/enumeration'
 
 ## Parameters
 # https://swagger.io/docs/specification/2-0/describing-parameters/
@@ -1192,3 +1221,21 @@ definitions:
           name:
             title: Name
             type: string
+  enumeration:
+    title: Enumeration
+    type: object
+    required:
+      - id
+      - name
+      - is_default
+    properties:
+      id:
+        title: Id
+        type: integer
+        format: int32
+      name:
+        title: Name
+        type: string
+      is_default:
+        title: IsDefault
+        type: boolean
