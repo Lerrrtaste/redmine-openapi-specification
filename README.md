@@ -51,7 +51,7 @@
 or
 [the generated json.](https://github.com/Lerrrtaste/redmine-openapi-specification/blob/main/redmine_openapi.json) 
 
-## Custom Connector
+## Custom Connector on MS Power Platform
 There are some limitations I found when using Custom Connectors that prevent the "correct" OpenAPI File from working.
 1. It does not support Parameter definition at the Path scope.<br>-> That is no big problem, I just reference every repeating Parameter Object from the Parameters Definitions Object at every Operation. (For example the IssueID Path Parameter: $ref: '#/parameters/idParam')<br><br>
 2. Redmine requires the following Body Scheme for Updating/Creating Resources:  `{
