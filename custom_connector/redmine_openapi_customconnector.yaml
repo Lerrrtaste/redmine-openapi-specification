@@ -297,7 +297,8 @@ paths:
                 type: boolean
               estimated_hours:
                 title: EstimatedHours
-                type: string
+                type: number
+                format: float
       responses:
         201:
           description: 'Created: issue was created'
@@ -399,7 +400,8 @@ paths:
                   type: boolean
                 estimated_hours:
                   title: EstimatedHours
-                  type: string
+                  type: number
+                  format: float
                 notes:
                   title: Notes
                   description: 'Comments about the update'
@@ -511,7 +513,8 @@ paths:
                 description: 'the date the time was spent (default to the current date); format is e.g. 2020-12-24'
               hours:
                 title: Hours
-                type: string
+                type: number
+                format: float
                 description: 'the number of spent hours'
               activity_id:
                 title: ActivityId
@@ -578,7 +581,8 @@ paths:
                 type: string
               hours:
                 title: Hours
-                type: string
+                type: number
+                format: float
                 description: 'the number of spent hours'
               activity_id:
                 title: ActivityId
@@ -996,6 +1000,7 @@ definitions:
       estimated_hours:
         title: EstimatedHours
         type: number
+        format: float
       created_on:
         title: CreatedOn
         type: string
@@ -1135,7 +1140,8 @@ definitions:
             type: string
       hours:
         title: Hours
-        type: string
+        type: number
+        format: float
       comments:
         title: Comments
         type: string
